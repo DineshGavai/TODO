@@ -3,6 +3,8 @@ let add_popup = document.querySelector(".add-popup");
 let cancel_btn = document.getElementById("cancel-btn");
 let note_input = document.getElementById("note_input");
 let get_text_btn = document.getElementById("add-note-btn");
+let notes_div = document.querySelector(".notes");
+let bin_div = document.querySelector(".bin");
 let note_box = document.querySelector(".notes-box");
 let show_sidebar = document.getElementById("side-bar-show-btn");
 let hide_sidebar = document.getElementById("hide-sidebar");
@@ -24,16 +26,15 @@ const add_note = () => {
   PElement.setAttribute("contenteditable", "true");
   PElement.style.outline = "none";
   const delete_icon = document.createElement("div");
-  delete_icon.classList.add("delete-icon");
-  delete_icon.innerHTML +=
-    "<button id='delete-icon'><i class='fa-solid fa-trash-can'></i></button>";
-  let delete_note_icon = document.getElementById("delete-icon");
-  console.log(delete_note_icon);
+  delete_icon.classList.add("icons");
+  delete_icon.innerHTML += "<i class='fa-solid fa-xmark not-completed '></i>";
+  delete_icon.innerHTML += "<i class='fa-solid fa-check completed'></i>";
+  delete_icon.innerHTML += "<i class='fa-solid fa-trash-can delete-icon'></i>";
   newNote.appendChild(PElement);
   newNote.appendChild(delete_icon);
   note_box.appendChild(newNote);
-  note_input.value = "";
   PElement.textContent = note_value;
+  note_input.value = "";
 };
 
 get_text_btn.addEventListener("click", () => {
@@ -49,12 +50,31 @@ hide_sidebar.addEventListener("click", () => {
   sidebar_div.classList.remove("open");
 });
 
-note_box.addEventListener("click", (e) => {
-  if (e.target.tagName === "I") {
-    e.target.parentElement.parentElement.parentElement.remove();
+sidebar_div.addEventListener("click", (e) => {
+  if (e.target.className === "bin-btn") {
+    notes_div.style.display = "none";
+    bin_div.style.display = "block";
+  } else if (e.target.className === "home-btn") {
+    notes_div.style.display = "block";
+    bin_div.style.display = "none";
   }
-  if (e.target.tagName === "DIV") {
-    console.log(e);
-    console.log("hell");
+});
+
+note_box.addEventListener("click", (e) => {
+  const target = e.target;
+  const notCompletedBtn = target.closest(".not-completed");
+  const completedBtn = target.closest(".completed");
+  const deleteIconBtn = target.closest(".delete-icon");
+  const note = target.closest(".note");
+
+  if (notCompletedBtn) {
+    note.style.backgroundColor = "rgb(248, 65, 65)";
+    console.log("Not completed button clicked");
+  } else if (completedBtn) {
+    note.style.backgroundColor = "#42db7a";
+    console.log("Completed button clicked");
+  } else if (deleteIconBtn) {
+    console.log("Delete button clicked");
+    note.remove();
   }
 });
